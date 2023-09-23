@@ -3,9 +3,9 @@ const { blogs, sequelize } = require('./model/index')
 const { renderCreateBlog, renderAllBlog, postBlog, renderSingleBlog, renderUpdate, updateBlog, deleteBlog } = require('./controller/blog/blogController')
 const app = express()
 const blogRoute=require("./routes/blogRoute")
+const userRoute=require('./routes/userRoute')
 // database connection 
 require("./model/index")
-
 // telling the nodejs to set view-engine to ejs
 app.set('view engine', 'ejs')
 
@@ -15,6 +15,7 @@ app.use(express.urlencoded({ extended: true }))
 
 
 app.use("",blogRoute)
+app.use("",userRoute)
 // app.get("/",renderAllBlog)
 // app.get("/createBlog", renderCreateBlog)
 // app.post("/createBlog", postBlog)

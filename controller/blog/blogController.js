@@ -32,7 +32,7 @@ exports.renderSingleBlog= async (req, res) => {
         }
     })
     // second finding approach
-    // const blog = await blogs.findByPk(id)
+    // !const blog = await blogs.findByPk(id)
 
     res.render("singleBlog", { blog: blog })
 }

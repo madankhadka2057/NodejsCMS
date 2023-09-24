@@ -3,6 +3,8 @@ const bcrypt = require("bcryptjs");
 exports.renderRegister = (req, res) => {
   res.render("register");
 };
+
+
 exports.register = async (req, res) => {
   const { name, email, password, confirm_password } = req.body;
   const checkEmail = await users.findAll({
@@ -17,7 +19,6 @@ exports.register = async (req, res) => {
       return res.send("User already exist");
     }
   }
-
   if (confirm_password != password) {
     console.log("Passwird Doesn't match please try again");
     return res.send("password doesn't match");
@@ -31,10 +32,15 @@ exports.register = async (req, res) => {
     res.redirect("/login");
   }
 };
+
+
 //! render Login from
 exports.renderLogin = (req, res) => {
   res.render("login");
 };
+
+
+
 //~checking loging
 exports.login = async (req, res) => {
   const { email, password } = req.body;

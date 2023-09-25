@@ -3,14 +3,9 @@
   <head>
     <title>Registration Form</title>
     <style>
-      body {
-        font-family: Arial, sans-serif;
-        background-color: #f2f2f2;
-      }
       .container {
         max-width: 400px;
         margin: auto;
-        margin-top:100px;
         padding: 20px;
         background-color: #fff;
         border-radius: 5px;
@@ -50,6 +45,7 @@
     </style>
   </head>
   <body>
+    <%-include('header.ejs')%>
     <div class="container">
       <h2>Registration Form</h2>
       <form action="/register" method="post">

@@ -3,16 +3,6 @@
   <head>
     <title>Login Form</title>
     <style>
-        *{
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-      body {
-        max-height: 100vh;
-        font-family: Arial, sans-serif;
-        background-color: #f2f2f2;
-      }
       .container {
         max-width: 400px;
         max-height: 400px;
@@ -59,6 +49,7 @@
     </style>
   </head>
   <body>
+    <%-include('header.ejs')%>
     <div class="container">
       <h2>Login Form</h2>
       <form action="/login" method="post">

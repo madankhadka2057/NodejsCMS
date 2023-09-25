@@ -79,3 +79,6 @@ exports.login = async (req, res) => {
   }
   // res.redirect('/')
 };
+// for ignore the file and folder
+// create file ".gitignore"
+//put that file you want to ignore

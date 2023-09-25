@@ -1,4 +1,4 @@
-const { blogs } = require("../../model")
+const { blogs } = require('../../model')//blogs is dataBase table name for all blogs and its define in model index
 exports.renderAllBlog= async (req, res) => {
     //blogs vanney table bata vayejati sabai data dey vaneko 
     const allBlogs = await blogs.findAll()

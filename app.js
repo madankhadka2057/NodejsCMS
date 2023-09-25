@@ -1,5 +1,5 @@
 const express = require("express");
-const { blogs, sequelize } = require("./model/index");
+const { blogs, sequelize } = require("./model/index");//its used in controller now
 //!its use when we dont us route now its used in routes
 // const {
 //   renderCreateBlog,

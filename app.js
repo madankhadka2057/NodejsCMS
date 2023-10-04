@@ -11,7 +11,10 @@ const { blogs, sequelize } = require("./model/index");//its used in controller n
 //   deleteBlog,
 // } = require("./controller/blog/blogController");
 const app = express();
+const cookieParser=require('cookie-parser');
+app.use(cookieParser())
 app.use(express.static('public'))//access public folder to use we can insert css files and picture andother
+app.use(express.static('uploads'))
 const blogRoute = require("./routes/blogRoute");//import routes for blogs
 const userRoute = require("./routes/userRoute");//import routes for authUser
 require("./model/index");//~ database connection
@@ -20,6 +23,11 @@ app.set("view engine", "ejs");// !telling the nodejs to set view-engine to ejs
 // form bata data aairaxa parse gara or handle gar vaneko ho
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use((req,res,next)=>{
+  res.locals.currentUser=req.cookies.token
+  next()
+})
 
 app.use("", blogRoute);//use route blog here like bogs,createBlog,singleBlog,updateBlog,deleteBlog
 app.use("", userRoute);//use route user like renderLogin,Login,renderRegister,register

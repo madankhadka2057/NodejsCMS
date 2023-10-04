@@ -52,14 +52,13 @@
     <%-include('header.ejs')%>
     <div class="container">
         <div class="author-info">
-     
             <div class="author-name"><%- blog[0].title  %></div>
         </div>
+        <img src="<%- blog[0].image %>" width="200px" height="200px">
         <div class="author-name"><%- blog[0].subTitle  %></div>
-
         <div class="post-content">
             <p><%- blog[0].description %></p>
-
+            <p>Author:<%-blog[0].user.name %></p>
         </div>
 
         <div class="post-footer">

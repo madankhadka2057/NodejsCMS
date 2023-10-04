@@ -70,15 +70,20 @@ exports.login = async (req, res) => {
           expiresIn:"30d"
         })
         res.cookie('token',token)// token is save in browser cookie in variable token we dont neet to import any dependency for it
-        res.send("Successfully login");
+        // res.send("Successfully login");
       } else {
         // console.log("Password Doesn't match")
         res.send("Password Doesn't match");
       }
     }
   }
-  // res.redirect('/')
+  res.redirect('/')
 };
+exports.logout=(req,res)=>{
+  res.clearCookie('token');
+  res.redirect('/login')
+}
 // for ignore the file and folder
 // create file ".gitignore"
 //put that file you want to ignore
+

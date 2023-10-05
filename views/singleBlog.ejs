@@ -12,12 +12,16 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 500px;
             margin: 20px auto;
             background-color: #fff;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
             padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         .author-info {
@@ -39,13 +43,48 @@
         }
 
         .post-content {
-            line-height: 1.6;
+            line-height: 0.3;
         }
 
         .post-footer {
             margin-top: 20px;
             font-style: italic;
         }
+        /* Style for the button container */
+.action-buttons {
+  margin-top: 10px; /* Adjust the spacing as needed */
+}
+
+/* Style for the delete button */
+.delete-button, .update-button {
+  display: inline-block;
+  padding: 10px 15px;
+  text-decoration: none;
+  color: #fff;
+  background-color: #e74c3c; /* Red color, you can change it to your preferred color */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, box-shadow 0.3s;
+  font-weight: bold;
+}
+a{
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+}
+
+
+.delete-button:hover, .update-button:hover {
+  background-color: #c0392b; /* Darker red on hover, adjust as needed */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+
+.delete-button:focus, .update-button:focus, .delete-button:active, .update-button:active {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
     </style>
 </head>
 <body>
@@ -64,10 +103,15 @@
         <div class="post-footer">
             Published on: <%- blog[0].createdAt.toISOString().slice(0,10) %>
         </div>
-        <button><a href="/delete/<%-blog[0].id %>">Delete</a></button>
-        <a href="/update/<%- blog[0].id %>">
-            <button>Update</button>
-        </a>
+        <% if (userId && blog[0].user.id === userId) { %>
+            <div class="action-buttons">
+              <button class="delete-button"><a href="/delete/<%-blog[0].id %>">Delete</a></button>
+              <a href="/update/<%- blog[0].id %>">
+                <button class="update-button">Update</button>
+              </a>
+            </div>
+          <% } %>
+
     </div>
 </body>
 </html>

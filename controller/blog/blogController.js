@@ -57,58 +57,53 @@ exports.renderUpdate = async (req, res) => {
   res.render("updateBlog", { data: updateData, id: id });
 };
 exports.updateBlog = async (req, res) => {
-  try {
-    const id = req.params.id;
-    const title = req.body.title;
-    const subTitle = req.body.subTitle;
-    const description = req.body.description;
+  const id = req.params.id;
+  const title = req.body.title;
+  const subTitle = req.body.subTitle;
+  const description = req.body.description;
 
-    const oldDatas = await blogs.findAll({
+  const oldDatas = await blogs.findAll({
+    where: {
+      id: id,
+    },
+  });
+  let fileUrl;
+  if (req.file) {
+    // console.log(req.file)
+    fileUrl = process.env.PROJECT_URL + req.file.filename; // process.env.PROJECT_URL-->http://localhost:3000/ and req.file.filename-->1696487619794-DSC_0032.JPG
+    const oldImagePath = oldDatas[0].image;
+    // console.log(oldImagePath)//http://localhost:3000/1696487619794-DSC_0032.JPG
+    const actualPath = oldImagePath.slice(23);
+    // console.log(actualPath)//1696487619794-DSC_0032.JPG
+
+    //delete file form uploads folder
+    fs.unlink("uploads/" + actualPath, (err) => {
+      if (err) {
+        console.log("Error accure: ", err);
+      } else {
+        console.log("Deleted Succesfully");
+      }
+    });
+  } else {
+    fileUrl = oldDatas[0].image;
+    console.log(fileUrl); // old already exist image url-->http://localhost:3000/1696487619794-DSC_0032.JPG
+  }
+
+  await blogs.update(
+    {
+      title: title,
+      subTitle: subTitle,
+      description: description,
+      image: fileUrl,
+    },
+    {
       where: {
         id: id,
       },
-    });
-    let fileUrl;
-    if (req.file) {
-      // console.log(req.file)
-      fileUrl = process.env.PROJECT_URL + req.file.filename; // process.env.PROJECT_URL-->http://localhost:3000/ and req.file.filename-->1696487619794-DSC_0032.JPG
-      const oldImagePath = oldDatas[0].image;
-      // console.log(oldImagePath)//http://localhost:3000/1696487619794-DSC_0032.JPG
-      const actualPath = oldImagePath.slice(23);
-      // console.log(actualPath)//1696487619794-DSC_0032.JPG
-
-      //delete file form uploads folder
-      fs.unlink("uploads/" + actualPath, (err) => {
-        if (err) {
-          console.log("Error accure: ", err);
-        } else {
-          console.log("Deleted Succesfully");
-        }
-      });
-    } else {
-      fileUrl = oldDatas[0].image;
-      console.log(fileUrl); // old already exist image url-->http://localhost:3000/1696487619794-DSC_0032.JPG
     }
+  );
 
-    await blogs.update(
-      {
-        title: title,
-        subTitle: subTitle,
-        description: description,
-        image: fileUrl,
-      },
-      {
-        where: {
-          id: id,
-        },
-      }
-    );
-
-    res.redirect("/single/" + id);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Internal server error");
-  }
+  res.redirect("/single/" + id);
 };
 //delete blog
 exports.deleteBlog = async (req, res) => {
@@ -121,7 +116,7 @@ exports.deleteBlog = async (req, res) => {
   });
   const imageUrl = allData[0].image;
   const actualUrl = imageUrl.slice(23);
-//   console.log(actualUrl);
+  //   console.log(actualUrl);
   await blogs.destroy({
     where: {
       id: id,
@@ -148,4 +143,4 @@ exports.myBlogs = async (req, res) => {
   // console.log("All data is:-",myBlogs)
   await res.render("myBlogs", { myBlogs: myBlogs });
 };
-//var 
+//var

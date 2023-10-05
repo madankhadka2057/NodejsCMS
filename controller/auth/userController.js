@@ -2,6 +2,7 @@ const { users } = require("../../model");//our datatable is define in model like
 const bcrypt = require("bcryptjs");
 const jwt=require('jsonwebtoken')// require jsonwebtoken for identify the user 
 require('dotenv').config();//it used for import .env file this file is too secure we defined secureKey for jwt token 
+const sendEmail=require('../../services/sendEmail')
 exports.renderRegister = (req, res) => {
   res.render("register");
 };
@@ -82,6 +83,32 @@ exports.login = async (req, res) => {
 exports.logout=(req,res)=>{
   res.clearCookie('token');
   res.redirect('/login')
+}
+//forget password
+exports.renderForgetPassword=async(req,res)=>{
+  res.render('forgetPassword')
+}
+exports.forgetPassword=async(req,res)=>{
+  const email=req.body.email
+  if(!email){
+    return res.send("Please provide email")
+  }
+
+  const emailExists=await users.findAll({
+    where:{
+      email:email
+    }
+  })
+  if(emailExists.length==0){
+    res.send("User doesn't exists")
+    return
+  }
+  sendEmail({
+    email:email,
+    subject:"Forget Password OTP",
+    otp:2057
+  })
+  res.send("OTP send successfuly")
 }
 // for ignore the file and folder
 // create file ".gitignore"

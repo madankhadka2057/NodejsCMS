@@ -41,11 +41,22 @@ exports.renderSingleBlog= async (req, res) => {
     // !const blog = await blogs.findByPk(id)
     res.render("singleBlog", { blog: blog })
 }
-exports.renderUpdate= (req, res) => {
+exports.renderUpdate= async(req, res) => {
+
+    //!!!!!!!!!!!!!!!!!!!!!!!!!!!
     const id = req.params.id
-    res.render("updateBlog", { id: id })
+    const updateData= await blogs.findAll({
+        where:{
+            id:id
+        }
+    })
+
+    console.log(updateData)
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    res.render("updateBlog", {data:updateData, id: id })
 }
 exports.updateBlog= async (req, res) => {
+
     try {
         const id = req.params.id
             await blogs.update({

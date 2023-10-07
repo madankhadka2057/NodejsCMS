@@ -12,7 +12,7 @@ exports.isValidUser = async (req, res, next) => {
 
   // Check if user data exists
   if (oldData[0].userId !== userId) {
-    console.log("User data found:", oldData[0]);
+    // console.log("User data found:", oldData[0]);
     res.send("You can't edit this blog");
   }else{
 

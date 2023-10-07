@@ -102,13 +102,15 @@ a{
         <div class="post-footer">
             Published on: <%- blog[0].createdAt.toISOString().slice(0,10) %>
         </div>
-        <% if (userId && blog[0].user.id === userId) { %>
-            <div class="action-buttons">
-              <button class="delete-button"><a href="/delete/<%-blog[0].id %>">Delete</a></button>
-              <a href="/update/<%- blog[0].id %>">
-                <button class="update-button">Update</button>
-              </a>
-            </div>
+        <% if (currentUser) { %>
+            <% if (currentUserId===blog[0].user.id) { %>
+                <div class="action-buttons">
+                <button class="delete-button"><a href="/delete/<%-blog[0].id %>">Delete</a></button>
+                <a href="/update/<%- blog[0].id %>">
+                    <button class="update-button">Update</button>
+                </a>
+                </div>
+            <% } %>
           <% } %>
 
     </div>

@@ -17,6 +17,7 @@ app.use(express.static('public'))//access public folder to use we can insert css
 app.use(express.static('uploads'))
 const blogRoute = require("./routes/blogRoute");//import routes for blogs
 const userRoute = require("./routes/userRoute");//import routes for authUser
+const { decodeToken } = require("./services/decodeToken");
 require("./model/index");//~ database connection
 app.set("view engine", "ejs");// !telling the nodejs to set view-engine to ejs
 
@@ -24,8 +25,17 @@ app.set("view engine", "ejs");// !telling the nodejs to set view-engine to ejs
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use((req,res,next)=>{
+app.use( async(req,res,next)=>{
   res.locals.currentUser=req.cookies.token
+  const token=req.cookies.token
+  if(token){
+    const decryptedResult=await decodeToken(token,process.env.secretKey)
+    if(decryptedResult&&decryptedResult.id){
+      console.log(decryptedResult)
+      res.locals.currentUserId=decryptedResult.id
+      
+    }
+  }
   next()
 })
 

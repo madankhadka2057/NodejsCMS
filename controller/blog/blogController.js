@@ -27,8 +27,6 @@ exports.postBlog = async (req, res) => {
 };
 exports.renderSingleBlog = async (req, res) => {
   const id = req.params.id;
-  const userId = req.userId;
-  console.log(userId);
   // second approach
   // const {id} = req.params
   // id ko data magnu/find garnu paryo hamro table bata
@@ -42,7 +40,7 @@ exports.renderSingleBlog = async (req, res) => {
   });
   // second finding approach
   // !const blog = await blogs.findByPk(id)
-  res.render("singleBlog", { userId: userId, blog: blog });
+  res.render("singleBlog", { blog: blog });
 };
 exports.renderUpdate = async (req, res) => {
   //!!!!!!!!!!!!!!!!!!!!!!!!!!!

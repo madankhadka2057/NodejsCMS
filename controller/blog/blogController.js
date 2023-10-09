@@ -7,7 +7,8 @@ exports.renderAllBlog = async (req, res) => {
   res.render("blogs", { blogs: allBlogs });
 };
 exports.renderCreateBlog = (req, res) => {
-  res.render("createBlog");
+  const error=req.flash('error')
+  res.render("createBlog",{error});
 };
 exports.postBlog = async (req, res) => {
   const title = req.body.title;
@@ -15,7 +16,14 @@ exports.postBlog = async (req, res) => {
   const subtitle = req.body.subtitle;
   const useId = req.user[0].id;
   const fileName = req.file.filename;
-  // console.log(req.file)
+  const fieSize=req.file.size
+  //check fileSize is is less then 2mb or not
+  if(fieSize>2097152){
+    req.flash("error","File size must be less then 2MB")
+    res.redirect('/createBlog')
+    return
+  }
+  
   await blogs.create({
     title: title,
     subTitle: subtitle,
@@ -132,7 +140,7 @@ exports.deleteBlog = async (req, res) => {
 //myBlogs
 exports.myBlogs = async (req, res) => {
   const userId = req.userId;
-  console.log(userId);
+  // console.log(userId);
   const myBlogs = await blogs.findAll({
     where: {
       userId,

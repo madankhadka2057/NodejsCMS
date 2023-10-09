@@ -3,9 +3,9 @@ const express = require('express');
 const { isAuthenticated } = require("../middleware/isAuthenticated");
 const router=require("express").Router()
 
-const {multer,storage,fileSizeFilter}=require("../middleware/multerConfig");
-const { validUser, isValidUser } = require("../middleware/validUser");
-const upload=multer({storage:storage,fileFilter:fileSizeFilter})
+const {multer,storage,/*fileSizeFilter*/}=require("../middleware/multerConfig");
+const {isValidUser } = require("../middleware/validUser");
+const upload=multer({storage:storage,/*fileFilter:fileSizeFilter*/})
 
 router.route("/").get(renderAllBlog)
 router.route("/createBlog").get(isAuthenticated,renderCreateBlog).post(isAuthenticated,upload.single('image'), postBlog)

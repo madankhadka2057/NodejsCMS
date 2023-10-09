@@ -1,4 +1,6 @@
 const express = require("express");
+const session = require('express-session');// for flash error message
+const flash=require('connect-flash')
 const { blogs, sequelize } = require("./model/index");//its used in controller now
 //!its use when we dont us route now its used in routes
 // const {
@@ -24,6 +26,13 @@ app.set("view engine", "ejs");// !telling the nodejs to set view-engine to ejs
 // form bata data aairaxa parse gara or handle gar vaneko ho
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(session({
+  secret: 'your-secret-key', // Change this to a secure random string
+  resave: false,
+  saveUninitialized: true,
+  // cookie: { maxAge: 5000 } // Set the max age of the session, adjust as needed
+}));
+app.use(flash())
 
 app.use( async(req,res,next)=>{
   res.locals.currentUser=req.cookies.token

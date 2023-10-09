@@ -1,11 +1,13 @@
 const multer = require("multer");
 //logic to validate the fileType(mimeTypes )
 const fileSizeFilter = (req, file, cb) => {
-  console.log("fileSize is:-", file.size);
-  if (file.size > 2000) {
-    cb(new Error("File size must be less then 2000 bytes"));
-    return;
-  }
+
+  // console.log("fileSize is:-", file);
+  // if (file.size > 2000) {
+  //   cb(new Error("File size must be less then 2000 bytes"));
+  //   return;
+  // }
+
   cb(null,true)
 };
 const storage = multer.diskStorage({
@@ -21,4 +23,4 @@ const storage = multer.diskStorage({
     cb(null, Date.now() + "-" + file.originalname);
   },
 });
-module.exports = { multer, storage, fileSizeFilter };
+module.exports = { multer, storage, /*fileSizeFilter */};

@@ -4,64 +4,59 @@ const jwt = require("jsonwebtoken"); // require jsonwebtoken for identify the us
 require("dotenv").config(); //it used for import .env file this file is too secure we defined secureKey for jwt token
 const sendEmail = require("../../services/sendEmail");
 exports.renderRegister = (req, res) => {
-  const error=req.flash('error')
-  res.render("register",{error});
+  const error = req.flash("error");
+  res.render("register", { error });
 };
 
 exports.register = async (req, res) => {
-  try {
-    const { name, email, password, confirm_password } = req.body;
-    const checkEmail = await users.findAll({
-      where: {
-        email: email,
-      },
-    });
-    console.log(checkEmail.length);
-    if (checkEmail.length != 0) {
-      const existingEmail = checkEmail[0].email;
-      console.log("mail is:", existingEmail);
-      if (existingEmail === email) {
-        req.flash("error","User already exist with this email") //send success message
-        res.redirect("/register");
-        return
-      }
-    }
-
-    if (confirm_password != password) {
-      req.flash("error","password doesn't match") //send success message
+  const { name, email, password, confirm_password } = req.body;
+  const checkEmail = await users.findAll({
+    where: {
+      email: email,
+    },
+  });
+  console.log(checkEmail.length);
+  if (checkEmail.length != 0) {
+    const existingEmail = checkEmail[0].email;
+    console.log("mail is:", existingEmail);
+    if (existingEmail === email) {
+      req.flash("error", "User already exist with this email"); //send success message
       res.redirect("/register");
-      return
-    } else {
-      // console.log(name, email, password);
-      await users.create({
-        name: name,
-        email: email,
-        password: bcrypt.hashSync(password, 8),
-      });
-      req.flash("success","Successfully  register")  //send success message
-      res.redirect("/login");
+      return;
     }
-  } catch {
-    req.flash("error","Error to register") //send success message
+  }
+
+  if (confirm_password != password) {
+    req.flash("error", "password doesn't match"); //send success message
     res.redirect("/register");
+    return;
+  } else {
+    // console.log(name, email, password);
+    await users.create({
+      name: name,
+      email: email,
+      password: bcrypt.hashSync(password, 8),
+    });
+    req.flash("success", "Successfully  register"); //send success message
+    res.redirect("/login");
   }
 };
 
 //! render Login from
 exports.renderLogin = (req, res) => {
-  const error=req.flash("error")
-  const success=req.flash("success")
-  console.log(success)
-  res.render("login",{error,success});
+  const error = req.flash("error");
+  const success = req.flash("success");
+  console.log(success);
+  res.render("login", { error, success });
 };
 
 //~checking loging
 exports.login = async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    req.flash("error","Please enter email or password")
-    res.redirect("/login")
-    return
+    req.flash("error", "Please enter email or password");
+    res.redirect("/login");
+    return;
   } else {
     const associatedDataWithEmail = await users.findAll({
       where: {
@@ -69,9 +64,9 @@ exports.login = async (req, res) => {
       },
     });
     if (associatedDataWithEmail.length === 0) {
-        req.flash("error","User Doesn't associated with this Email")
-        res.redirect("/login")
-        return;
+      req.flash("error", "User Doesn't associated with this Email");
+      res.redirect("/login");
+      return;
     } else {
       const assocaitedPasswordWithEmail = associatedDataWithEmail[0].password;
       const id = associatedDataWithEmail[0].id;
@@ -89,9 +84,9 @@ exports.login = async (req, res) => {
       } else {
         // console.log("Password Doesn't match")
         // res.send("Password Doesn't match");
-        req.flash("error","Password doesn't match")
-        res.redirect("/login")
-        return
+        req.flash("error", "Password doesn't match");
+        res.redirect("/login");
+        return;
       }
     }
   }
@@ -159,8 +154,8 @@ exports.handleOtp = async (req, res) => {
         // existingUser[0].otp = null;
         // existingUser[0].otpGeneratedTime = null;
         // existingUser[0].save();
-       // res.redirect("/changePassword?email=" + email); //for pass single query
-      res.redirect(`/changePassword?email=${email}&otp=${otp}`);
+        // res.redirect("/changePassword?email=" + email); //for pass single query
+        res.redirect(`/changePassword?email=${email}&otp=${otp}`);
       }
     }
   }
@@ -169,19 +164,19 @@ exports.handleOtp = async (req, res) => {
 exports.renderChangePassword = (req, res) => {
   const email = req.query.email;
   const otp = req.query.otp;
-  console.log(email,otp)
-  res.render("changePassword", { email: email,otp:otp });
+  console.log(email, otp);
+  res.render("changePassword", { email: email, otp: otp });
 };
 exports.changePassword = async (req, res) => {
   const email = req.params.email;
   const otp = req.params.otp;
-  if(!email||!otp){
-    res.send("Don't do like this")
+  if (!email || !otp) {
+    res.send("Don't do like this");
   }
   const password = req.body.password;
   const confirmPassword = req.body.confirmPassword;
-  if(!password||!confirmPassword){
-    res.send("please provide password")
+  if (!password || !confirmPassword) {
+    res.send("please provide password");
   }
   if (password !== confirmPassword) {
     return res.json({ error: "Passwords do not match" });
@@ -189,7 +184,7 @@ exports.changePassword = async (req, res) => {
   const user = await users.findOne({
     where: {
       email: email,
-      otp:otp
+      otp: otp,
     },
   });
   if (!user) {
@@ -200,10 +195,10 @@ exports.changePassword = async (req, res) => {
     res.send("New password or old password is same try another password");
     return;
   }
-  console.log(user)
+  console.log(user);
   user.password = bcrypt.hashSync(password, 9);
-  user.otp=null
-  user.otpGeneratedTime=null
+  user.otp = null;
+  user.otpGeneratedTime = null;
   await user.save();
   res.redirect("/login");
 };

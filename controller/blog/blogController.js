@@ -1,4 +1,5 @@
-const { blogs, users } = require("../../model"); //blogs is dataBase table name for all blogs and its define in model index
+const { QueryTypes } = require("sequelize");
+const { blogs, users, sequelize } = require("../../model"); //blogs is dataBase table name for all blogs and its define in model index
 const fs = require("fs"); //fs-->fileSystem
 exports.renderAllBlog = async (req, res) => {
   //blogs vanney table bata vayejati sabai data dey vaneko
@@ -7,29 +8,53 @@ exports.renderAllBlog = async (req, res) => {
   res.render("blogs", { blogs: allBlogs });
 };
 exports.renderCreateBlog = (req, res) => {
-  const error=req.flash('error')
-  res.render("createBlog",{error});
+  const error = req.flash("error");
+  res.render("createBlog", { error });
 };
 exports.postBlog = async (req, res) => {
   const title = req.body.title;
   const description = req.body.description;
   const subtitle = req.body.subtitle;
   const useId = req.user[0].id;
-  const fileName = req.file.filename;
-  const fieSize=req.file.size
-  //check fileSize is is less then 2mb or not
-  if(fieSize>2097152){
-    req.flash("error","File size must be less then 2MB")
-    res.redirect('/createBlog')
-    return
+  if (!req.file) {
+    req.flash("error", "Please upload an image");
+    res.redirect("/createBlog");
+    return;
   }
-  
+  const fileName = req.file.filename;
+  const fileSize = req.file.size;
+  const image = process.env.PROJECT_URL + fileName;
+  //check fileSize is is less then 2mb or not
+  if (fileSize > 2097152) {
+    req.flash("error", "File size must be less than 2MB");
+    res.redirect("/createBlog");
+    return;
+  }
+  //query to make separate blog table for each user
+  // await sequelize.query(`CREATE TABLE IF NOT EXISTS blog_${useId}(id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  //   userId INT NOT NULL REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  //   title VARCHAR(255),
+  //   description VARCHAR(255),
+  //   subtitle VARCHAR(255),
+  //   image VARCHAR(255)
+  // )`),
+  //   {
+  //     type: QueryTypes.CREATE,
+  //   };
+  // //inserting blog data
+  // await sequelize.query(
+  //   `INSERT INTO blog_${useId}(title,subtitle,description,userId,image)VALUEs(?,?,?,?,?)`,
+  //   {
+  //     type: QueryTypes.INSERT,
+  //     replacements: [title, subtitle, description, useId, image],
+  //   }
+  // );
   await blogs.create({
     title: title,
     subTitle: subtitle,
     description: description,
     userId: useId,
-    image: process.env.PROJECT_URL + fileName,
+    image: image,
   });
   res.redirect("/");
 };
@@ -122,7 +147,7 @@ exports.deleteBlog = async (req, res) => {
   });
   const imageUrl = allData[0].image;
   const actualUrl = imageUrl.slice(23);
-  //   console.log(actualUrl);
+  //   console.log(actualUrl); //like this-->1696487619794-DSC_0032.JPG
   await blogs.destroy({
     where: {
       id: id,

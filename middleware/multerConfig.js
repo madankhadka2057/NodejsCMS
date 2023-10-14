@@ -15,6 +15,7 @@ const storage = multer.diskStorage({
     const allowedFileTypes = ["image/png", "image/jpeg", "image/jpg"];
     if (!allowedFileTypes.includes(file.mimetype)) {
       cb(new Error("Invalide fileType only supports png,gpeg,jpg"));
+      // cb(req.flash("error",`new Error("Invalide fileType only supports png,gpeg,jpg")`));
       return;
     }
     cb(null, "./uploads/");
